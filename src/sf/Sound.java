@@ -38,8 +38,7 @@ import sf.util.Bais;
  * @author Ron Coleman
  */
 public class Sound {
-    public enum Cue { DEAL, CHARLIE, BJ, NICE, TOUCH };
-    private final int EXTERNAL_BUFFER_SIZE = 128000;
+    private final int EXTERNAL_BUFFER_SIZE = 128000 * 4;
     private SourceDataLine line;
     private AudioInputStream audioInputStream;
     private Bais bais;
@@ -79,7 +78,6 @@ public class Sound {
              Then, we exit the program.
              */
             e.printStackTrace();
-            System.exit(1);
         }
 
         /*
@@ -115,8 +113,7 @@ public class Sound {
          some default value for the buffer size.
          */
         line = null;
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-                audioFormat);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
         try {
             line = (SourceDataLine) AudioSystem.getLine(info);
 
@@ -201,5 +198,12 @@ public class Sound {
         gainControl.setValue(db);
 
         gainControl.getValue();
+    }
+    
+    public float getVolume() {
+        FloatControl gainControl =
+                (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+        
+        return gainControl.getValue();
     }
 }

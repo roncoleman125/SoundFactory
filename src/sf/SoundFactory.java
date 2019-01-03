@@ -26,26 +26,7 @@ public class SoundFactory {
 	 * @return Sound
 	 */
 	public static Sound getInstance(String path) {
-		Sound sound = sounds.get(path);
-		
-		if(sound != null)
-			return sound;
-		
-		sound = new Sound(path);
-		
-		sounds.put(path, sound);
-		
-		if(!primed) {
-			sound.setVolume(-80.0f);
-			
-			sound.play();
-			
-			sound.setVolume(6.0f);
-			
-			primed = true;
-		}
-		
-		return sound;
+		return new Sound(path);
 	}
 	
 	/**
@@ -89,11 +70,4 @@ public class SoundFactory {
 	public static void play(String path) {
 		play(path, 1);
 	}
-	
-	public static void main(String[] args) {
-		Sound sound = SoundFactory.getInstance("src/res/goodshot-2.wav");
-		
-		sound.play();
-	}
-
 }
