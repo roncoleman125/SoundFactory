@@ -4,7 +4,7 @@ import sf.Sound;
 import sf.SoundFactory;
 
 /**
- * Tests a sound.
+ * Plays a test sound.
  * @author Ron.Coleman
  *
  */
