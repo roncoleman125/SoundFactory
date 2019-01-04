@@ -1,3 +1,25 @@
+/*
+ Copyright 2014 Ron Coleman
+
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package sf;
 
 import java.io.File;
@@ -17,7 +39,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import sf.util.Bais;
 
 /**
- * Update 1 Jan 2019: originally copied from the Charlie project on GitHub.com.
+ * Update 1 Jan 2019: Originally copied from the Charlie project on GitHub.com.
  * 
  * This class is a facade for the Java sound API. It was modified from the
  * Tritonus library to be play the sound multiple times without having to
@@ -51,7 +73,7 @@ public class Sound {
 
     /**
      * Constructor
-     * @param filename File name
+     * @param filename File name of sound to play
      */
     protected Sound(String filename) {
         File soundFile = new File(filename);
@@ -82,13 +104,10 @@ public class Sound {
 
         /*
          From the AudioInputStream, i.e. from the sound file,
-         we fetch information about the format of the
-         audio data.
-         These information include the sampling frequency,
-         the number of
-         channels and the size of the samples.
-         These information
-         are needed to ask Java Sound for a suitable output line
+         we fetch information about the format of the audio data.
+         These information include the sampling frequency, the number of
+         channels and the size of the samples. These information
+         are needed to ask Java Sound for a suitable output line 
          for this audio file.
          */
         AudioFormat audioFormat = audioInputStream.getFormat();
@@ -96,21 +115,16 @@ public class Sound {
         /*
          Asking for a line is a rather tricky thing.
          We have to construct an Info object that specifies
-         the desired properties for the line.
-         First, we have to say which kind of line we want. The
-         possibilities are: SourceDataLine (for playback), Clip
-         (for repeated playback)	and TargetDataLine (for
-         recording).
-         Here, we want to do normal playback, so we ask for
-         a SourceDataLine.
-         Then, we have to pass an AudioFormat object, so that
-         the Line knows which format the data passed to it
-         will have.
+         the desired properties for the line. First, we have to say which
+         kind of line we want. The possibilities are: SourceDataLine
+         (for playback), Clip (for repeated playback) and TargetDataLine (for
+         recording). Here, we want to do normal playback, so we ask for
+         a SourceDataLine. Then, we have to pass an AudioFormat object, so that
+         the Line knows which format the data passed to it will have.
          Furthermore, we can give Java Sound a hint about how
          big the internal buffer for the line should be. This
-         isn't used here, signaling that we
-         don't care about the exact size. Java Sound will use
-         some default value for the buffer size.
+         isn't used here, signaling that we don't care about the exact size.
+         Java Sound will use some default value for the buffer size.
          */
         line = null;
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
@@ -131,6 +145,9 @@ public class Sound {
         }
     }
 
+    /**
+     * Plays the sound synchronously, meaning it waits until the sound fiinishes.
+     */
     public void play() {
         try {
             bais.rewind();
@@ -178,8 +195,7 @@ public class Sound {
          Wait until all data are played.
          This is only necessary because of the bug noted below.
          (If we do not wait, we would interrupt the play back by
-         prematurely closing the line and exiting the VM.)
-		 
+         prematurely closing the line and exiting the VM.)		 
          Thanks to Margie Fitch for bringing me on the right
          path to this solution.
          */
@@ -187,7 +203,7 @@ public class Sound {
     }
     
     /**
-     * Sets the volume in relative decibels.<br>
+     * Sets the audio volume in relative decibels.<br>
      * See http://stackoverflow.com/questions/953598/audio-volume-control-increase-or-decrease-in-java
      * @param db Decibels
      */
@@ -200,6 +216,10 @@ public class Sound {
         gainControl.getValue();
     }
     
+    /**
+     * Gets the audio volume in decibels.
+     * @return Decibels
+     */
     public float getVolume() {
         FloatControl gainControl =
                 (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
